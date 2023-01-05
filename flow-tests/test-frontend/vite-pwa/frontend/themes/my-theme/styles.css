@@ -24,3 +24,7 @@ body {
 h1 {
   margin: 0 0 var(--lumo-space-xl);
 }
+
+html {
+  --theme-my-theme-loaded:1;
+}

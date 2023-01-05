@@ -175,7 +175,7 @@ function generateThemeFile(themeFolder, themeName, themeProperties, options) {
   }
 
   if (useDevServer) {
-    globalCssCode.push(`injectGlobalCss(${variable}.toString(), target);\n    `);
+    globalCssCode.push(`if (target !== document) { injectGlobalCss(${variable}.toString(), target); }\n    `);
   }
   if (existsSync(document)) {
     filename = basename(document);

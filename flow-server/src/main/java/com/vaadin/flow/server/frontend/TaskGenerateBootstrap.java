@@ -90,17 +90,16 @@ public class TaskGenerateBootstrap extends AbstractTaskClientGenerator {
     }
 
     private Collection<String> getThemeLines() {
+        ThemeDefinition themeDef = frontDeps.getThemeDefinition();
         Collection<String> lines = new ArrayList<>();
-        if (shouldApplyAppTheme()) {
+        if (themeDef != null && !"".equals(themeDef.getName())) {
             lines.add("import { applyTheme } from './theme.js';");
             lines.add("applyTheme(document);");
+            lines.add("import 'Frontend/themes/" + themeDef.getName()
+                    + "/styles.css';");
             lines.add("");
         }
         return lines;
     }
 
-    private boolean shouldApplyAppTheme() {
-        ThemeDefinition themeDef = frontDeps.getThemeDefinition();
-        return themeDef != null && !"".equals(themeDef.getName());
-    }
 }

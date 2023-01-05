@@ -136,8 +136,7 @@ public class TaskGenerateBootstrapTest {
         String content = taskGenerateBootstrap.getFileContent();
 
         final List<String> expectedContent = Arrays.asList("import './index';",
-                "import { applyTheme } from './theme.js';",
-                "applyTheme(document);");
+                "import 'Frontend/themes/my-theme/styles.css';");
 
         expectedContent.forEach(expectedLine -> Assert.assertTrue(
                 String.format(
