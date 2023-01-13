@@ -128,7 +128,18 @@ public class TaskRunDevBundleBuild implements FallibleCommand {
             return true;
         }
 
+        if (reusedTheme(options)) {
+            getLogger().info("Packaged custom theme was found.");
+            return true;
+        }
+
         return false;
+    }
+
+    private static boolean reusedTheme(Options options) {
+        File reusedThemesFolder = new File(
+                options.getJarFrontendResourcesFolder(), "themes");
+        return reusedThemesFolder.exists();
     }
 
     private static boolean frontendImportsFound(JsonObject statsJson,
