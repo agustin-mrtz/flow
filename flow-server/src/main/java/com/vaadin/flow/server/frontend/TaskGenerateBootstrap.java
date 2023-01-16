@@ -95,8 +95,7 @@ public class TaskGenerateBootstrap extends AbstractTaskClientGenerator {
         if (themeDef != null && !"".equals(themeDef.getName())) {
             lines.add("import { applyTheme } from './theme.js';");
             lines.add("applyTheme(document);");
-            lines.add("import 'Frontend/themes/" + themeDef.getName()
-                    + "/styles.css';");
+            lines.add("import 'themes/" + themeDef.getName() + "/styles.css';");
             lines.add("");
         }
         return lines;
