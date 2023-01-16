@@ -48,17 +48,22 @@ function getThemeProperties(themeFolder) {
   return JSON.parse(themePropertyFileAsString);
 }
 
-
 function rewriteCssUrls(source, handledResourceFolder, themeFolder, logger, options) {
   source = source.replace(urlMatcher, function (match, url, quoteMark, replace, fileUrl, endString) {
     let absolutePath = resolve(handledResourceFolder, replace, fileUrl);
     const existingThemeResource = absolutePath.startsWith(themeFolder) && existsSync(absolutePath);
-    if (
-      existingThemeResource || assetsContains(fileUrl, themeFolder, logger)
-    ) {
-      // Adding ./ will skip css-loader, which should be done for asset files
-      const skipLoader = existingThemeResource ? '' : './';
-      const frontendThemeFolder = skipLoader + 'themes/' + basename(themeFolder);
+    if (existingThemeResource || assetsContains(fileUrl, themeFolder, logger)) {
+      let prefix = '';
+      if (!existingThemeResource) {
+        // Adding ./ will skip css-loader, which should be done for asset files
+        if (options.devMode) {
+          prefix = './';
+        } else {
+          prefix = '../../';
+        }
+      }
+
+      const frontendThemeFolder = prefix + 'themes/' + basename(themeFolder);
       logger.debug(
         'Updating url for file',
         "'" + replace + fileUrl + "'",
@@ -68,9 +73,12 @@ function rewriteCssUrls(source, handledResourceFolder, themeFolder, logger, opti
       const pathResolved = absolutePath.substring(themeFolder.length).replace(/\\/g, '/');
 
       // keep the url the same except replace the ./ or ../ to themes/[themeFolder]
-      return url + (quoteMark??'') + frontendThemeFolder + pathResolved + endString;
+      return url + (quoteMark ?? '') + frontendThemeFolder + pathResolved + endString;
     } else if (options.devMode) {
       logger.log("No rewrite for '", match, "' as the file was not found.");
+    } else {
+      const newUrl = '../../' + fileUrl;
+      return url + (quoteMark ?? '') + newUrl + endString;
     }
     return match;
   });
