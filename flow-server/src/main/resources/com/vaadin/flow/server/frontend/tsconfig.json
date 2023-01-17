@@ -33,5 +33,7 @@
     "frontend/**/*",
     "types.d.ts"
   ],
-  "exclude": []
+  "exclude": [
+    "frontend/generated/jar-resources/**"
+  ]
 }
